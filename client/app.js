@@ -3,21 +3,61 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
+ 
+var button1 = document.getElementById('tdt1');
+var button2=document.getElementById('tdt2');
+var shelterMarkers = new L.FeatureGroup();
+var info=document.getElementById("info");
+liste_marker=[];
 
-var tdt1 = document.getElementById(tdt2);
-var tdt2 = document.getElementById(tdt2);
-var marker_tdt = new Location.FeatureGroup();
+function tdt1(i){
+    data="id2="+i
+    fetch('../serveur/my_tdt1.json', {
+        method: 'post',
+        body: data,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+      .then(r => r.json())
+      .then(r => {
+        button1.addEventListener("click",ajout,{once:true});
+          function ajout(){
+            var marker = L.marker([r[i].lat, r[i].lon]);
+            liste_marker.push(marker);
+            marker.addTo(shelterMarkers);
+            shelterMarkers.addTo(map);
+            info.textContent="magnitude: "+r[i].magni+" distance:"+r[i].dist;
+            map.fitBounds(shelterMarkers.getBounds());
+          }
+      })
 
-var marker = L.marker([51.5, -0.09]).addTo(map);
+}
+function tdt2(i){
+    data="id="+i
+    fetch('../serveur/my_tdt2.json', {
+        method: 'post',
+        body: data,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+      .then(r => r.json())
+      .then(r => {
+        button2.addEventListener("click",ajout2,{once:true});
+          function ajout2(){
+            var marker = L.marker([r[i].lat, r[i].lon]);
+            marker.addTo(shelterMarkers);
+            shelterMarkers.addTo(map);
+            info.textContent="magnitude: "+r[i].magni+"<br/> distance:"+r[i].dist;
+            map.fitBounds(shelterMarkers.getBounds());
+          }
+      })
+}
 
 
-/*fetch('page.php')
-.then(function (result) {
-  // retourne le résultat binaire en text
-  return result.text();
-})
-.then(function (result) {
-  // result (le résultat au format texte)
-  // par ex, on l’intègre brut dans la page
-  document.getElementById('id').innerHTML = result;
-})*/
+
+for(var i=0;i<3;i++){
+    tdt1(i);
+    tdt2(i);
+}
