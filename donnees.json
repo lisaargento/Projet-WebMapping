@@ -716,27 +716,27 @@
 	[
 		{
 		"nom": "Nombre de décès par mois",
-		"description": "Nombre de décès du mois rapporté aux nombres de décès de l’année",
+		"description": "Nombre de décès du mois rapporté aux nombres de décès de l’année"
 		}
 	,
 		{
 		"nom": "Nombre de décès d'enfants <10 ans",
-		"description": "Nombre de décès d’enfants de moins de dix ans rapporté aux nombres de décès du département",
+		"description": "Nombre de décès d’enfants de moins de dix ans rapporté aux nombres de décès du département"
 		}
 	,
 		{
 		"nom": "Nombre de décès par accident de la route",
-		"description": "Nombre de décès par accident de la route rapporté aux nombres de décès de l'année",
+		"description": "Nombre de décès par accident de la route rapporté aux nombres de décès de l'année"
 		}
 	,
 		{
 		"nom": "Nombre de décès par suicide",
-		"description": "Nombre de décès par suicide rapporté aux nombres de décès de l'année",
+		"description": "Nombre de décès par suicide rapporté aux nombres de décès de l'année"
 		}
 	,
 		{
 		"nom": "Nombre de décès de personnes >70 ans",
-		"description": "Nombre de décès de personnes >70 ans rapporté aux nombres de décès de l'année",
+		"description": "Nombre de décès de personnes >70 ans rapporté aux nombres de décès de l'année"
 		}
 	]
 	}
