@@ -85,7 +85,7 @@ map.on('singleclick', function(e) {
   });
   //renvoie le nom du département cliqué dans la console
   console.log("Information sur le point cliqué : ", dep.N.nom); 
-  //Affiche le tableau associé au département choisi??????????????????????????????????????????,
+  //Affiche le tableau associé au département choisi
   var infoStat = document.getElementById('info_sup');
     fetch('donnees.json').then(function(response){
       response.json().then(function(data){
