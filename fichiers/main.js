@@ -86,22 +86,50 @@ map.on('singleclick', function(e) {
   //renvoie le nom du département cliqué dans la console
   console.log("Information sur le point cliqué : ", dep.N.nom); 
   //Affiche le tableau associé au département choisi
-  var infoStat = document.getElementById('info_sup');
-    fetch('donnees.json').then(function(response){
-      response.json().then(function(data){
-        console.log(data[0].departements[1].statistiques[id_stat])
-        var tab;
-        if(dep.N.nom == data[0].statistiques){
-          tab = data[0].departements[1].statistiques[id_stat];
+  fetch('donnees.json').then(function(response){
+    var tab;
+    response.json().then(function(data){
+      for (let i = 0; i < data[0].departements.length; i++){//Parcourt la liste des départements
+        // Récupère la stat en fonction du département
+        if(dep.N.nom == data[0].departements[i].nom){
+          tab = data[0].departements[i].statistiques[id_stat];
+          console.log(tab); // tableau 12,1 en sortie qui n'est pas affichable
           return tab
         }
-        infoStat.innerHTML = dep.N.nom + " : " + tab;
-      })
+      }
     })
+  })
+
+  // // affichage panneau pour Timeline 
+  // let modalAlreadyShowed = false
+
+  //   if( tab != "" && ! modalAlreadyShowed) {
+  //     setTimeout( () => {
+  //       document.getElementById('modal').style.display = 'block'
+  //     }, 2000 )
+  //     modalAlreadyShowed = true
+  //   }
+  // //fermeture
+  // document.getElementById('modal-close').addEventListener('click', function(e) {
+  // document.getElementById('modal').style.display = 'none'
+  // })
 });
 
 
-	
+// let modalAlreadyShowed = false
+
+// map.addEventListener('click', function(e) {
+//   if( ! modalAlreadyShowed ) {
+//     setTimeout( () => {
+//       document.getElementById('modal').style.display = 'block'
+//     }, 2000 )
+//     modalAlreadyShowed = true
+//   }
+// });
+// //fermeture
+// document.getElementById('modal-close').addEventListener('click', function(e) {
+//   document.getElementById('modal').style.display = 'none'
+// })
    
 
 // function fetchJSON(url, code_dep) { //Appel du GEOJSON stocké dans le dossier, contenant les frontières de chaque département métropolitain
