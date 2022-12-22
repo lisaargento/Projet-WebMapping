@@ -4,10 +4,11 @@
     width: 95vw; 
 	margin-top: 1vh;
 }
-.modal {
+
+#pannel {
     display: none;
   }
-  .modal-back {
+  #pannel-back {
     position: fixed;
     top: 0;
     left: 0;
@@ -15,11 +16,14 @@
     bottom: 0;
     background: rgba( 0, 0, 0, .25 )
   }
-  .modal-container {
+  #pannel-container {
     position: fixed;
     top: 50%;
     left: 50%;
     padding: 25px;
     background: white;
     transform: translate(-50%, -50%)
+  }
+  #btn_close {
+
   }

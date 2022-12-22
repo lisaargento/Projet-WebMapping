@@ -77,7 +77,11 @@ function envoi(e){
   info.innerHTML = "Statistique étudiée : " + stat + " en " + annee;
 }
 
-//SELECTION UN DEPARTEMENT -> retourne infos
+
+
+// SELECTION UN DEPARTEMENT -> retourne infos
+
+  //RECUPARATION INFORMATIONS PERTINENTES
 map.on('singleclick', function(e) {
   var dep = map.forEachFeatureAtPixel(e.pixel, function(dep) {
     if (id_stat<0){alert('Vous devez choisir une statistique à étudier ou valider votre choix !')}
@@ -86,8 +90,8 @@ map.on('singleclick', function(e) {
   //renvoie le nom du département cliqué dans la console
   console.log("Information sur le point cliqué : ", dep.N.nom); 
   //Affiche le tableau associé au département choisi
+  var tab;
   fetch('donnees.json').then(function(response){
-    var tab;
     response.json().then(function(data){
       for (let i = 0; i < data[0].departements.length; i++){//Parcourt la liste des départements
         // Récupère la stat en fonction du département
@@ -100,19 +104,20 @@ map.on('singleclick', function(e) {
     })
   })
 
-  // // affichage panneau pour Timeline 
-  // let modalAlreadyShowed = false
+  //AFFICHAGE INFORMATIONS PERTINENTES -> panneau pour Timeline 
+  let modalAlreadyShowed = false
 
-  //   if( tab != "" && ! modalAlreadyShowed) {
-  //     setTimeout( () => {
-  //       document.getElementById('modal').style.display = 'block'
-  //     }, 2000 )
-  //     modalAlreadyShowed = true
-  //   }
-  // //fermeture
-  // document.getElementById('modal-close').addEventListener('click', function(e) {
-  // document.getElementById('modal').style.display = 'none'
-  // })
+    if( tab != "" && ! modalAlreadyShowed) {
+      setTimeout( () => {
+        document.getElementById('pannel').style.display = 'block'
+      }, 2000 )
+      modalAlreadyShowed = true
+    }
+  //fermeture
+  document.getElementById('btn_close').addEventListener('click', function(e) {
+  document.getElementById('pannel').style.display = 'none'
+  })
+
 });
 
 
