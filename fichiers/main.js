@@ -3,6 +3,7 @@ var select_statistique = document.getElementById('statistiques');
 var select_annee = document.getElementById('annee');
 var form = document.getElementById('form');
 var info = document.getElementById('info');
+var timeline = document.getElementById('tab');
 
 
 // CREATION CARTE AVEC OPENLAYERS
@@ -55,7 +56,7 @@ fetch('donnees.json').then(function(response){
 })
 
 // AJOUT DES ANNEES DANS LE SELECT
-for (let i = 1980; i < 2023; i++){
+for (let i = 2022; i > 1980; i--){
   option = document.createElement('option');
   option.text = i;
   select_annee.add(option);
@@ -105,14 +106,14 @@ map.on('singleclick', function(e) {
   })
 
   //AFFICHAGE INFORMATIONS PERTINENTES -> panneau pour Timeline 
-  let modalAlreadyShowed = false
+  let PannelAlreadyExist = false
 
-    if( tab != "" && ! modalAlreadyShowed) {
-      setTimeout( () => {
-        document.getElementById('pannel').style.display = 'block'
-      }, 2000 )
-      modalAlreadyShowed = true
-    }
+  if( tab != "" && ! PannelAlreadyExist) {
+    setTimeout( () => {
+      document.getElementById('pannel').style.display = 'block'
+    }, 2000 )
+    PannelAlreadyExist = true
+  }
   //fermeture
   document.getElementById('btn_close').addEventListener('click', function(e) {
   document.getElementById('pannel').style.display = 'none'
@@ -121,21 +122,8 @@ map.on('singleclick', function(e) {
 });
 
 
-// let modalAlreadyShowed = false
 
-// map.addEventListener('click', function(e) {
-//   if( ! modalAlreadyShowed ) {
-//     setTimeout( () => {
-//       document.getElementById('modal').style.display = 'block'
-//     }, 2000 )
-//     modalAlreadyShowed = true
-//   }
-// });
-// //fermeture
-// document.getElementById('modal-close').addEventListener('click', function(e) {
-//   document.getElementById('modal').style.display = 'none'
-// })
-   
+timeline.innerHTML('Timeline Circulaire de : ' + stat + " en " + annee)
 
 // function fetchJSON(url, code_dep) { //Appel du GEOJSON stocké dans le dossier, contenant les frontières de chaque département métropolitain
 //   return fetch(url)
