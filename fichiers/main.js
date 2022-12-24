@@ -3,7 +3,13 @@ var select_statistique = document.getElementById('statistiques');
 var select_annee = document.getElementById('annee');
 var form = document.getElementById('form');
 var info = document.getElementById('info');
-var timeline = document.getElementById('tab');
+var pannel = document.getElementById('pannel');
+var titre = document.getElementById('titre');
+var timeline = document.getElementById('timeline');
+var stat;
+var annee;
+var tab;
+var dep_select;
 
 
 // CREATION CARTE AVEC OPENLAYERS
@@ -21,15 +27,13 @@ var map = new ol.Map({
 });
 
 
+
 // AJOUT GEOJSON DES DÉPARTEMENTS -> create a new vector layer for the GeoJSON data
 
 var dep = new ol.layer.Vector({
   source: new ol.source.Vector({
     url: 'contour_dep.geojson',
     format: new ol.format.GeoJSON(),
-    // paint: {
-    //   'line-color': '#00FF00'
-    // }
   }),
 })
 map.addLayer(dep);// add the vector layer to the map
@@ -38,7 +42,6 @@ console.log(dep);
 
 
 // AJOUT DES STATISTIQUES DANS LE SELECT
-
 select_statistique.selectedIndex=1;
 fetch('donnees.json').then(function(response){
   if (response.status!==200){
@@ -68,62 +71,73 @@ var id_stat = -1; //id stat choisie
 form.addEventListener("submit", envoi)
 function envoi(e){
   e.preventDefault();
-  var stat = select_statistique.options[select_statistique.selectedIndex].value;
-  var annee = select_annee.value;
+  stat = select_statistique.options[select_statistique.selectedIndex].value;
+  annee = select_annee.value;
   id_stat = select_statistique.selectedIndex - 1;
-  console.log("stats : ",stat);
-  console.log("année : ",annee);
-  console.log("id_stat : ",id_stat);
+  // console.log("stats : ",stat);
+  // console.log("année : ",annee);
+  // console.log("id_stat : ",id_stat);
   //Affiche le nom de la stat étudiée
   info.innerHTML = "Statistique étudiée : " + stat + " en " + annee;
+  return
 }
-
-
 
 // SELECTION UN DEPARTEMENT -> retourne infos
 
   //RECUPARATION INFORMATIONS PERTINENTES
 map.on('singleclick', function(e) {
   var dep = map.forEachFeatureAtPixel(e.pixel, function(dep) {
-    if (id_stat<0){alert('Vous devez choisir une statistique à étudier ou valider votre choix !')}
-    return dep;
+    if (id_stat < 0) {alert('Vous devez choisir une statistique à étudier ou valider votre choix !')}
+    return dep
   });
+
   //renvoie le nom du département cliqué dans la console
-  console.log("Information sur le point cliqué : ", dep.N.nom); 
+//console.log("Information sur le point cliqué : ", dep.N.nom); 
+
   //Affiche le tableau associé au département choisi
-  var tab;
-  fetch('donnees.json').then(function(response){
-    response.json().then(function(data){
-      for (let i = 0; i < data[0].departements.length; i++){//Parcourt la liste des départements
-        // Récupère la stat en fonction du département
-        if(dep.N.nom == data[0].departements[i].nom){
-          tab = data[0].departements[i].statistiques[id_stat];
-          console.log(tab); // tableau 12,1 en sortie qui n'est pas affichable
-          return tab
-        }
+fetch('donnees.json').then(function(response){
+  response.json().then(function(data){
+    for (let i = 0; i < data[0].departements.length; i++){//Parcourt la liste des départements
+      // Récupère la stat en fonction du département
+      if(dep.N.nom == data[0].departements[i].nom){
+        tab = data[0].departements[i].statistiques[id_stat];
+        console.log(tab); // tableau 12,1 en sortie qui n'est pas affichable
+        return tab
       }
-    })
+    }
   })
+})
 
   //AFFICHAGE INFORMATIONS PERTINENTES -> panneau pour Timeline 
-  let PannelAlreadyExist = false
+let PannelAlreadyExist = false
 
-  if( tab != "" && ! PannelAlreadyExist) {
-    setTimeout( () => {
-      document.getElementById('pannel').style.display = 'block'
-    }, 2000 )
-    PannelAlreadyExist = true
-  }
+  //création panneau s'il n'xuste pas déjà
+if( tab != "" && ! PannelAlreadyExist) {
+  setTimeout( () => {
+    pannel.style.display = 'block'
+  }, 2000 )
+  PannelAlreadyExist = true
+}
+
+  //ajout Info stat étudiée titre pannel (NE FONCTIONNE PAS)
+titre.innerHTML = dep.N.nom.bold() + " : Timeline circulaire du " + stat.toLowerCase() + " en " + annee;
+timeline.add(Janvier);
+//var month = new Array("Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre");  
+// for (i = 0; i<month.length; i++){  
+// timeline.add(month[i]);  
+// }
+
   //fermeture
   document.getElementById('btn_close').addEventListener('click', function(e) {
-  document.getElementById('pannel').style.display = 'none'
+  pannel.style.display = 'none'
   })
 
 });
 
 
+ 
 
-timeline.innerHTML('Timeline Circulaire de : ' + stat + " en " + annee)
+
 
 // function fetchJSON(url, code_dep) { //Appel du GEOJSON stocké dans le dossier, contenant les frontières de chaque département métropolitain
 //   return fetch(url)
