@@ -119,7 +119,7 @@ if( tab != "" && ! PannelAlreadyExist) {
   PannelAlreadyExist = true
 }
 
-  //ajout Info stat étudiée titre pannel (NE FONCTIONNE PAS)
+  //ajout info stat étudiée titre pannel (NE FONCTIONNE PAS)
 titre.innerHTML = dep.N.nom.bold() + " : Timeline circulaire du " + stat.toLowerCase() + " en " + annee;
 timeline.add(Janvier);
 //var month = new Array("Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre");  
@@ -133,7 +133,6 @@ timeline.add(Janvier);
   })
 
 });
-
 
  
 
