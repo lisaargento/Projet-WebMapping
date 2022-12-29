@@ -97,7 +97,8 @@ map.on('singleclick', function(e) {
     //renvoie le nom du département cliqué dans la console
   else{
     nom_dep = dep.N.nom;
-    console.log("Information sur le point cliqué : ", dep.N.nom)}
+    //console.log("Information sur le point cliqué : ", dep.N.nom)
+  }
   return 
   });
 });
@@ -110,12 +111,12 @@ map.on('singleclick', function(e) {
         if(nom_dep == data[0].departements[i].nom){
           tab = data[0].departements[i].statistiques[id_stat];
           console.log(tab); // tableau 12,1 en sortie qui n'est pas affichable
-        return tab
+        afficher_pannel();
+        return 
         }
       }
     })
   })
-
 
 
 
