@@ -69,7 +69,6 @@ for (let i = 2022; i > 1980; i--){
 }
 
 
-
 //ENVOIE FORM AVEC STAT ET ANNEE CHOISIES
 form.addEventListener("submit", envoi)
 function envoi(e){
@@ -90,14 +89,13 @@ function envoi(e){
 
 //RECUPARATION INFORMATIONS PERTINENTES
 
-
 //récupération département cliqué
 map.on('singleclick', function(e) {
   dep = map.forEachFeatureAtPixel(e.pixel, function(dep) {
   if (id_stat < 0) {alert('Vous devez choisir une statistique à étudier ou valider votre choix !')}
   else{
-    //Renvoie le nom du département cliqué dans la console
     nom_dep = dep.N.nom;
+    //Renvoie le nom du département cliqué dans la console
     console.log("Information sur le point cliqué : ", dep.N.nom);
     //Récupére le tableau associé au département choisi
     fetch('donnees.json').then(function(response){
@@ -118,28 +116,44 @@ map.on('singleclick', function(e) {
 })
 
 
-
   
-    //AFFICHAGE INFORMATIONS PERTINENTES -> panneau pour Timeline 
+    //AFFICHAGE INFORMATIONS DANS PANNEAU 
 function afficher_pannel(){ //NE FONCTIONNE PAS !!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //création panneau s'il n'existe pas déjà
+  //création panneau s'il n'existe pas déjà
   if(PannelAlreadyExist == 0) {
     setTimeout( function(){
       pannel.style.display = 'block';
-    }, 1000 )
+      //ajout Info stat étudiée titre pannel 
+      titre.innerHTML = nom_dep.bold() + " : Timeline circulaire du " + stat.toLowerCase() + " en " + annee;
 
-    //ajout Info stat étudiée titre pannel 
-    titre.innerHTML = nom_dep.bold() + " : Timeline circulaire du " + stat.toLowerCase() + " en " + annee;
-    var month = new Array("Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre");  
-    timeline.innerHTML = month;// CA SORT DU PANNEAU!!!!
-    // for (i = 0; i<month.length; i++){  
-    // timeline.add(month[i]);  
-    // }
+      var xValues = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+      var yValues = tab;
+
+      const chart = new Chart("myChart", {
+        type: "line",
+        data: {
+          labels: xValues,
+          datasets: [{
+            fill: false,
+            lineTension: 0,
+            backgroundColor: "rgba(0,0,255,1.0)",
+            borderColor: "rgba(0,0,255,0.1)",
+            data: yValues
+          }]
+        },
+        options: {
+          legend: {display: false},
+          scales: {
+            yAxes: [{ticks: {min: Math.min.apply(null, yValues)-1, max: Math.max.apply(null, yValues)+1}}],
+          }
+        }
+      });
+      timeline.add(chart);
+    }, 800 )
 
     //fermeture
-    document.getElementById('btn_close').addEventListener('click', function() {
-      //pannel.style.display = 'none';
-      //pannel.close(); //NE FONCTIONNE PAS
+    document.getElementById("btn_close").addEventListener('click', function() {
+      pannel.style.display = 'none';
       PannelAlreadyExist = 0
     });
 

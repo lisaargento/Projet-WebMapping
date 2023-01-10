@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="icon.ico" />
     <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <link rel="stylesheet" href="app.css">
     <title>Statistiques des décès par déparpartement en France métropolitaine</title>
 </head>
@@ -29,7 +30,9 @@
         <div id="pannel-back"></div>
         <div id="pannel-container">
             <div id="titre">Timeline circulaire des décès par département</div>
-            <div id="timeline"></div>
+            <div id="timeline">
+                <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+            </div>
             <a id="btn_close">Fermer</a>
         </div>
       </div>
