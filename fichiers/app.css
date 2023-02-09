@@ -32,7 +32,7 @@
   }
   #titre{
     font-size: 1.5em;
-    font: calibri;
+    font-family: calibri;
   }
   /* Style boutton */
   #btn_close {
@@ -46,10 +46,11 @@
     border: solid 1px #000000;
     padding: 12px;
     float: right;
-    margin-top: 5vh;
+    position: relative;
   }
   #btn_close:hover { /* NE FONCTIONNE PAS */
     background-color: rgb(26, 96, 124);
+    color: rgb(255, 255, 255);
     font-weight: bold;
   }
 
