@@ -132,44 +132,38 @@ function afficher_pannel(){ //NE FONCTIONNE PAS !!!!!!!!!!!!!!!!!!!!!!!!!!!
       var xValues = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
       var yValues = tab;
 
-      var canvas = document.getElementById('myChart');
-      ctx = canvas.getContext('2d'),
-        startingData = {
+      const chart = new Chart("myChart", {
+        type: "line",
+        data: {
           labels: xValues,
           datasets: [
-            {//first dataset
+            {// dataset
               lineTension: 0,
               backgroundColor: "rgba(0,20,255,0.1)",
               borderColor: "rgba(0,20,255,0.5)",
               strokeColor: "rgba(151,187,205,1)",
               pointColor: "rgba(0,20,255,0.5)",
-              pointStrokeColor: "#fff",
-              data: yValues[0]},
-
-              {//second dataset
-                lineTension: 0,
-                backgroundColor: "rgba(0,20,255,0.1)",
-                borderColor: "rgba(0,20,255,0.5)",
-                strokeColor: "rgba(151,187,205,1)",
-                pointColor: "rgba(0,20,255,0.5)",
-                data: yValues
-              } 
+              data: yValues
+            }
+            //addData(valuesArray, label)?????????????????
+              //for (let i = 0; i < yValues.length; i++){
+              //setTimeout(function(){
+              //val = val.push('yValues[i]');
+              //},1000)
+              //}    
           ]
-        };
-      // Reduce the animation steps for demo clarity.
-      var myLiveChart = new Chart(ctx).Line(startingData, {animationSteps: 15});
-
-
-      setInterval(function(){
-        // Update one of the points in the second dataset
-        myLiveChart.datasets[1].points[1].value =  Math.random();
-        myLiveChart.update();
-      }, 5000);
-
-
-  });
-
-
+        },
+        options: {
+          legend: {
+            display: false,
+          },
+          scales: {
+            yAxes: [{ticks: {min: 0, max: Math.max.apply(null, yValues)+1}}],
+          }
+        }
+      });
+      timeline.add(chart);
+    }, 800 )
 
     //fermeture
     document.getElementById("btn_close").addEventListener('click', function() {
@@ -180,47 +174,7 @@ function afficher_pannel(){ //NE FONCTIONNE PAS !!!!!!!!!!!!!!!!!!!!!!!!!!!
     PannelAlreadyExist = 1
   }
 
-}
-  
-//CODE HTML pour graph des stats
-// <!DOCTYPE html>
-// <html>
-// <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-// <body>
-// <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
-
-//CODE JS pour graph des stats
-// <script>
-// var xValues = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
-// var yValues = [7,8,8,9,9,9,10,11,14,14,15,15];
-
-// new Chart("myChart", {
-//   type: "line",
-//   data: {
-//     labels: xValues,
-//     datasets: [{
-//       fill: false,
-//       lineTension: 0,
-//       backgroundColor: "rgba(0,0,255,1.0)",
-//       borderColor: "rgba(0,0,255,0.1)",
-//       data: yValues
-//     }]
-//   },
-//   options: {
-//     legend: {display: false},
-//     scales: {
-//       yAxes: [{ticks: {min: Math.min.apply(null, yValues)-1, max: Math.max.apply(null, yValues)+1}}],
-//     }
-//   }
-// });
-// </script>
-
-// </body>
-// </html>
-
-
-
-  
+};
 
 
 
