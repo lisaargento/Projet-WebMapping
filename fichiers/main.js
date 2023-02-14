@@ -104,16 +104,13 @@ map.on('singleclick', function(e) {
           // Récupère la stat en fonction du département
           if(nom_dep == data[0].departements[i].nom){
             tab = data[0].departements[i].statistiques[id_stat];
-            console.log(tab); // tableau 12,1 en sortie qui n'est pas affichable
+            //console.log(tab); // tableau 12,1 en sortie qui n'est pas affichable
           }
         }
       })
     })
     //Affiche pannel 
-    afficher_pannel();
-    setInterval(function(){
-      chart.update();
-    }, 2000);
+    afficher_pannel()
   }
   })
 })
@@ -132,34 +129,19 @@ function afficher_pannel(){ //NE FONCTIONNE PAS !!!!!!!!!!!!!!!!!!!!!!!!!!!
       var xValues = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
       var yValues = tab;
 
-      const chart = new Chart("myChart", {
+      var chart = new Chart("myChart", {
         type: "line",
         data: {
           labels: xValues,
           datasets: [
-            //{//first dataset
-              // lineTension: 0,
-              // backgroundColor: "rgba(0,20,255,0.1)",
-              // borderColor: "rgba(0,20,255,0.5)",
-              // strokeColor: "rgba(151,187,205,1)",
-              // pointColor: "rgba(0,20,255,0.5)",
-              // pointStrokeColor: "#fff",
-              // data: yValues[0]},
-
-              {//second dataset
-                lineTension: 0,
-                backgroundColor: "rgba(0,20,255,0.1)",
-                borderColor: "rgba(0,20,255,0.5)",
-                strokeColor: "rgba(151,187,205,1)",
-                pointColor: "rgba(0,20,255,0.5)",
-                data: yValues
-              }
-            //addData(valuesArray, label)?????????????????
-              //for (let i = 0; i < yValues.length; i++){
-              //setTimeout(function(){
-              //val = val.push('yValues[i]');
-              //},1000)
-              //}    
+            {// dataset
+              lineTension: 0,
+              backgroundColor: "rgba(0,20,255,0.1)",
+              borderColor: "rgba(0,20,255,0.5)",
+              strokeColor: "rgba(151,187,205,1)",
+              pointColor: "rgba(0,20,255,0.5)",
+              data: [yValues[0],yValues[1]]
+            }    
           ]
         },
         options: {
@@ -171,8 +153,20 @@ function afficher_pannel(){ //NE FONCTIONNE PAS !!!!!!!!!!!!!!!!!!!!!!!!!!!
           }
         }
       });
-      timeline.add(chart);
+
+console.log(chart.data.datasets[0].data);
+      // Add a new point to the chart every second
+      setInterval(function() {
+        for (let i = 1; i < yValues.length; i++){
+        var newPoint = yValues[i]; // add new point from the list
+        chart.data.datasets[0].push(newPoint); // Add the new data point to the chart
+        console.log(chart.data);
+        chart.update();} // Update the chart to display the new data point
+      }, 2000); // Execute the function every 2 seconds
     }, 800 )
+
+
+
 
     //fermeture
     document.getElementById("btn_close").addEventListener('click', function() {
@@ -183,47 +177,7 @@ function afficher_pannel(){ //NE FONCTIONNE PAS !!!!!!!!!!!!!!!!!!!!!!!!!!!
     PannelAlreadyExist = 1
   }
 
-}
-  
-//CODE HTML pour graph des stats
-// <!DOCTYPE html>
-// <html>
-// <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-// <body>
-// <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
-
-//CODE JS pour graph des stats
-// <script>
-// var xValues = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
-// var yValues = [7,8,8,9,9,9,10,11,14,14,15,15];
-
-// new Chart("myChart", {
-//   type: "line",
-//   data: {
-//     labels: xValues,
-//     datasets: [{
-//       fill: false,
-//       lineTension: 0,
-//       backgroundColor: "rgba(0,0,255,1.0)",
-//       borderColor: "rgba(0,0,255,0.1)",
-//       data: yValues
-//     }]
-//   },
-//   options: {
-//     legend: {display: false},
-//     scales: {
-//       yAxes: [{ticks: {min: Math.min.apply(null, yValues)-1, max: Math.max.apply(null, yValues)+1}}],
-//     }
-//   }
-// });
-// </script>
-
-// </body>
-// </html>
-
-
-
-  
+};
 
 
 
