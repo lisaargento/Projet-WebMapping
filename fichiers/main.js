@@ -12,8 +12,11 @@ var id_stat = -1;
 var nom_dep;
 var tab;
 var PannelAlreadyExist = 0;
-//var PannelAlreadyExist = new Boolean(false);   // valeur initiale à false;
 
+//alert("Vous devez d'abord choisir une statistique à étudier et une année d'étude. Puis il vous suffira de cliquer sur le ou les départements que vous souhaitez étudier.");
+
+
+//  -------------------------- AFFICHAGE DE LA CARTE -------------------------- //
 
 // CREATION CARTE AVEC OPENLAYERS
 var map = new ol.Map({
@@ -30,9 +33,7 @@ var map = new ol.Map({
 });
 
 
-
 // AJOUT GEOJSON DES DÉPARTEMENTS -> create a new vector layer for the GeoJSON data
-
 var dep = new ol.layer.Vector({
   source: new ol.source.Vector({
     url: 'contour_dep.geojson',
@@ -43,6 +44,7 @@ map.addLayer(dep);// add the vector layer to the map
 console.log(dep);
 
 
+//  -------------------------- REMPLISSAGE ET ENVOI FORM -------------------------- //
 
 // AJOUT DES STATISTIQUES DANS LE SELECT
 select_statistique.selectedIndex=1;
@@ -85,9 +87,8 @@ function envoi(e){
 }
 
 
+//  -------------------------- AFFICHAGE PANNEAU INFO DEP -------------------------- //
 
-
-//RECUPARATION INFORMATIONS PERTINENTES
 
 //récupération département cliqué
 map.on('singleclick', function(e) {
@@ -95,8 +96,7 @@ map.on('singleclick', function(e) {
   if (id_stat < 0) {alert('Vous devez choisir une statistique à étudier ou valider votre choix !')}
   else{
     nom_dep = dep.N.nom;
-    //Renvoie le nom du département cliqué dans la console
-    console.log("Information sur le point cliqué : ", dep.N.nom);
+    console.log("Information sur le point cliqué : ", dep.N.nom);//Renvoie le nom du département cliqué dans la console
     //Récupére le tableau associé au département choisi
     fetch('donnees.json').then(function(response){
       response.json().then(function(data){
@@ -110,77 +110,84 @@ map.on('singleclick', function(e) {
       })
     })
     //Affiche pannel 
-    afficher_pannel()
+    afficher_pannel();
   }
   })
 })
 
 
-  
-    //AFFICHAGE INFORMATIONS DANS PANNEAU 
-function afficher_pannel(){ //NE FONCTIONNE PAS !!!!!!!!!!!!!!!!!!!!!!!!!!!
+//AFFICHAGE PANNEAU  
+function afficher_pannel(){ 
   //création panneau s'il n'existe pas déjà
   if(PannelAlreadyExist == 0) {
-    setTimeout(function(){
-      pannel.style.display = 'block';
-      //ajout Info stat étudiée titre pannel 
-      titre.innerHTML = nom_dep.bold() + " : Timeline du " + stat.toLowerCase() + " en " + annee;
+    PannelAlreadyExist = 1;
+    pannel.style.display = 'block';
+    fermer_pannel();
+    remplissage_pannel()
+  }
+}
 
-      var xValues = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
-      var yValues = tab;
+  //AJOUT INFORMATIONS DANS PANNEAU
+  function remplissage_pannel(){
+    if(PannelAlreadyExist == 1){ 
+    //ajout Info stat étudiée titre pannel 
+    titre.innerHTML = nom_dep.bold() + " : Timeline du " + stat.toLowerCase() + " en " + annee;
 
-      var chart = new Chart("myChart", {
-        type: "line",
-        data: {
-          labels: xValues,
-          datasets: [
-            {// dataset
-              lineTension: 0,
-              backgroundColor: "rgba(0,20,255,0.1)",
-              borderColor: "rgba(0,20,255,0.5)",
-              strokeColor: "rgba(151,187,205,1)",
-              pointColor: "rgba(0,20,255,0.5)",
-              data: [yValues[0],yValues[1]]
-            }    
-          ]
+    var xValues = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+    var yValues = tab;
+    console.log(yValues);
+
+    var chart = new Chart("myChart", {
+      type: "line",
+      data: {
+        labels: xValues,
+        datasets: [
+          {label: 'Nombre de personnes décédées',
+          lineTension: 0,
+          backgroundColor: "rgba(0,20,255,0.1)",
+          borderColor: "rgba(0,20,255,0.5)",
+          strokeColor: "rgba(151,187,205,1)",
+          pointColor: "rgba(0,20,255,0.5)",
+          data: [yValues[0]]}    
+        ]
+      },
+      options: {
+        legend: {
+          display: false,
+          boxWidth: 0,
         },
-        options: {
-          legend: {
-            display: false,
-          },
-          scales: {
-            yAxes: [{ticks: {min: 0, max: Math.max.apply(null, yValues)+1}}],
-          }
+        scales: {
+          yAxes: [{ticks: {min: 0, max: Math.max.apply(null, tab)+1}}],
         }
-      });
-
-console.log(chart.data.datasets[0].data);
-      // Add a new point to the chart every second
-      setInterval(function() {
-        for (let i = 1; i < yValues.length; i++){
-        var newPoint = yValues[i]; // add new point from the list
-        chart.data.datasets[0].push(newPoint); // Add the new data point to the chart
-        console.log(chart.data);
-        chart.update();} // Update the chart to display the new data point
-      }, 2000); // Execute the function every 2 seconds
-    }, 800 )
-
-
-
-
-    //fermeture
-    document.getElementById("btn_close").addEventListener('click', function() {
-      pannel.style.display = 'none';
-      PannelAlreadyExist = 0
+      }
     });
-
-    PannelAlreadyExist = 1
   }
 
-};
+    // Add a new point to the chart every 2 seconds
+    for (let i = 1; i < yValues.length; i++){
+          console.log(chart.data.datasets[0].data);
+          chart.data.datasets[0].data.push(yValues[i]);
+          setInterval(
+            chart.update(),// Update the chart to display the new data point every 2 seconds 
+          2000); // Add the new data point to the chart
+    };
+  }
+  
+
+  //SUPPRESSION PANNEAU
+  function fermer_pannel(){
+    //écoute bouton pour fermer panneau
+    if(PannelAlreadyExist == 1) {
+      document.getElementById("btn_close").addEventListener('click', function() {
+        delete chart;//supprimer chart existante!!!!!!!!!!!!!!!!!!!!!
+        pannel.style.display = 'none';
+        PannelAlreadyExist = 0;
+      });
+    }
+  };
 
 
-
+//Pr colorer les départements??????????????????????????????
   // function fetchJSON(url, code_dep) { //Appel du GEOJSON stocké dans le dossier, contenant les frontières de chaque département métropolitain
   //   return fetch(url)
   //   .then(result => result.json())
