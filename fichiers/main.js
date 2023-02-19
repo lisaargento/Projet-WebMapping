@@ -12,6 +12,7 @@ var id_stat = -1;
 var nom_dep;
 var tab;
 var PannelAlreadyExist = 0;
+var chart;
 
 //alert("Vous devez d'abord choisir une statistique à étudier et une année d'étude. Puis il vous suffira de cliquer sur le ou les départements que vous souhaitez étudier.");
 
@@ -41,7 +42,6 @@ var dep = new ol.layer.Vector({
   })
 });
 map.addLayer(dep);// add the vector layer to the map
-console.log(dep);
 
 
 //  -------------------------- REMPLISSAGE ET ENVOI FORM -------------------------- //
@@ -104,74 +104,73 @@ map.on('singleclick', function(e) {
           // Récupère la stat en fonction du département
           if(nom_dep == data[0].departements[i].nom){
             tab = data[0].departements[i].statistiques[id_stat];
-            //console.log(tab); // tableau 12,1 en sortie qui n'est pas affichable
+            console.log(tab); // tableau 12,1 en sortie qui n'est pas affichable
           }
         }
       })
     })
     //Affiche pannel 
-    afficher_pannel();
+    afficher_pannel(tab);
   }
   })
 })
 
 
 //AFFICHAGE PANNEAU  
-function afficher_pannel(){ 
+function afficher_pannel(tab){ 
   //création panneau s'il n'existe pas déjà
   if(PannelAlreadyExist == 0) {
-    PannelAlreadyExist = 1;
-    pannel.style.display = 'block';
-    fermer_pannel();
-    remplissage_pannel()
+    PannelAlreadyExist = 1,
+    pannel.style.display = 'block',
+    fermer_pannel(),
+    remplissage_pannel(tab)
   }
 }
 
-  //AJOUT INFORMATIONS DANS PANNEAU
-  function remplissage_pannel(){
-    if(PannelAlreadyExist == 1){ 
-    //ajout Info stat étudiée titre pannel 
-    titre.innerHTML = nom_dep.bold() + " : Timeline du " + stat.toLowerCase() + " en " + annee;
+//AJOUT INFORMATIONS DANS PANNEAU
+function remplissage_pannel(tab){
+  //ajout Info stat étudiée titre pannel 
+  titre.innerHTML = nom_dep.bold() + " : Timeline du " + stat.toLowerCase() + " en " + annee;
 
-    var xValues = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
-    var yValues = tab;
-    console.log(yValues);
+  var xValues = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+  var yValues = tab;
+  console.log(tab);//NE FONCTIONNE PLUS??????????????????
+  
 
-    var chart = new Chart("myChart", {
-      type: "line",
-      data: {
-        labels: xValues,
-        datasets: [
-          {label: 'Nombre de personnes décédées',
-          lineTension: 0,
-          backgroundColor: "rgba(0,20,255,0.1)",
-          borderColor: "rgba(0,20,255,0.5)",
-          strokeColor: "rgba(151,187,205,1)",
-          pointColor: "rgba(0,20,255,0.5)",
-          data: [yValues[0]]}    
-        ]
+  chart = new Chart("myChart", {
+    type: "line",
+    data: {
+      labels: xValues,
+      datasets: [
+        {label: 'Nombre de personnes décédées',
+        lineTension: 0,
+        backgroundColor: "rgba(0,20,255,0.1)",
+        borderColor: "rgba(0,20,255,0.5)",
+        strokeColor: "rgba(151,187,205,1)",
+        pointColor: "rgba(0,20,255,0.5)",
+        data: [yValues[0]]}    
+      ]
+    },
+    options: {
+      legend: {
+        display: false,
+        boxWidth: 0,
       },
-      options: {
-        legend: {
-          display: false,
-          boxWidth: 0,
-        },
-        scales: {
-          yAxes: [{ticks: {min: 0, max: Math.max.apply(null, tab)+1}}],
-        }
+      scales: {
+        yAxes: [{ticks: {min: 0, max: Math.max.apply(null, tab)+1}}],
       }
-    });
-  }
-
-    // Add a new point to the chart every 2 seconds
-    for (let i = 1; i < yValues.length; i++){
-          console.log(chart.data.datasets[0].data);
-          chart.data.datasets[0].data.push(yValues[i]);
-          setInterval(
-            chart.update(),// Update the chart to display the new data point every 2 seconds 
-          2000); // Add the new data point to the chart
-    };
-  }
+    }
+  });
+  //timeline.add(chart);
+  // Add a new point to the chart every 2 seconds
+  for (var i = 0; i < 12; i++){//for (var i = 0; i < yValues.length; i++){
+    setInterval(
+      console.log(chart.data),
+      chart.data.datasets[0].data.push(yValues[i]),
+      chart.update(),// Update the chart to display the new data point every 2 seconds 
+    500); // Add the new data point to the chart
+  };
+}
   
 
   //SUPPRESSION PANNEAU
@@ -179,7 +178,7 @@ function afficher_pannel(){
     //écoute bouton pour fermer panneau
     if(PannelAlreadyExist == 1) {
       document.getElementById("btn_close").addEventListener('click', function() {
-        delete chart;//supprimer chart existante!!!!!!!!!!!!!!!!!!!!!
+        //chart.destroy();//supprimer chart existante!!!!!!!!!!!!!!!!!!!!!
         pannel.style.display = 'none';
         PannelAlreadyExist = 0;
       });
