@@ -17,8 +17,9 @@ var chart;
 //alert("Vous devez d'abord choisir une statistique à étudier et une année d'étude. Puis il vous suffira de cliquer sur le ou les départements que vous souhaitez étudier.");
 
 
+
 //  -------------------------- AFFICHAGE DE LA CARTE -------------------------- //
-//Définition de la vue initiale pour pouvoir recentrer la carte
+//Définition de la vue initiale (pour pouvoir recentrer la carte)
 const view = new ol.View({
   center: ol.proj.fromLonLat([3, 46.6]),// coordonnées de centrage
   zoom: 5.35// niveau de zoom
@@ -27,16 +28,11 @@ const view = new ol.View({
 // CREATION CARTE AVEC OPENLAYERS
 var map = new ol.Map({
   target: 'map', // the ID of the element in which to render the map
-  layers: [
-    new ol.layer.Tile({
-      source: new ol.source.OSM()
-    })
-  ],
+  layers: [new ol.layer.Tile({source: new ol.source.OSM()})],
   view: view
 });
 
 //AJOUT BOUTON POUR RECENTRER LA CARTE
-// add click event listener to center button
 const centerButton = document.getElementById('center-button');
 centerButton.addEventListener('click', function() {
   view.setCenter(ol.proj.fromLonLat([3, 46.6]));
@@ -68,7 +64,6 @@ const styleFunction = function(format) {
       width: 1.5
     }),
   });
-
   return new ol.style.Style({
     fill: new ol.style.Fill({
       color: randomColor
@@ -77,10 +72,10 @@ const styleFunction = function(format) {
       color: 'black',
       width: 0.2
     }),
-    text: label // add the label to the style
+    text: label // ajout des noms de département dans le style
   });
 };
-//ajout du style aux départements
+//AJOUT DU STYLE AUX DEPARTEMENTS
 depLayer.setStyle(styleFunction);
 
 
@@ -145,19 +140,16 @@ map.on('singleclick', function(e) {
         for (let i = 0; i < data[0].departements.length; i++){//Parcourt la liste des départements
           // Récupère la stat en fonction du département
           if(nom_dep == data[0].departements[i].nom){
-            tab = data[0].departements[i].statistiques[id_stat];
-            console.log(tab); // tableau 12,1 en sortie
+            tab = data[0].departements[i].statistiques[id_stat],
+            console.log(tab) // tableau 12,1 en sortie
           }
         }
-        console.log(tab);
       })
-      console.log(tab);
     })
     //Affiche pannel 
     console.log(tab);
     afficher_pannel();
-
-  }
+  };
   })
 })
 
@@ -224,7 +216,7 @@ function remplissage_pannel(){
     chart.update();// Update the chart to display the new data point every 2 seconds
     setTimeout(
       chart.data.datasets[0].data.push(yValues[i]),
-    500); // Add the new data point to the chart
+    1000); // Add the new data point to the chart
  };
 }
   
