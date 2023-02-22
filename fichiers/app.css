@@ -34,7 +34,23 @@
     font-size: 1.5em;
     font-family: calibri;
   }
-  /* Style boutton */
+
+  #info{
+    font-family: calibri;
+    margin-left: 1vw;
+  }
+
+
+/*** Style boutons ***/
+
+  /*bouton carte*/
+  #center-button{
+    margin-top: 1vh;
+    text-align: center;
+    left: 80vw;
+  }
+
+  /*bouton panneau*/
   #btn_close {
     text-align: center;
     color: black;

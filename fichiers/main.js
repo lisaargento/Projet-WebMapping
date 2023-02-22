@@ -18,6 +18,11 @@ var chart;
 
 
 //  -------------------------- AFFICHAGE DE LA CARTE -------------------------- //
+//Définition de la vue initiale pour pouvoir recentrer la carte
+const view = new ol.View({
+  center: ol.proj.fromLonLat([3, 46.6]),// coordonnées de centrage
+  zoom: 5.35// niveau de zoom
+});
 
 // CREATION CARTE AVEC OPENLAYERS
 var map = new ol.Map({
@@ -27,21 +32,57 @@ var map = new ol.Map({
       source: new ol.source.OSM()
     })
   ],
-  view: new ol.View({
-    center: ol.proj.fromLonLat([3, 47]),
-    zoom: 5.5
-  })
+  view: view
+});
+
+//AJOUT BOUTON POUR RECENTRER LA CARTE
+// add click event listener to center button
+const centerButton = document.getElementById('center-button');
+centerButton.addEventListener('click', function() {
+  view.setCenter(ol.proj.fromLonLat([3, 46.6]));
+  view.setZoom(5.3);
 });
 
 
 // AJOUT GEOJSON DES DÉPARTEMENTS -> create a new vector layer for the GeoJSON data
-var dep = new ol.layer.Vector({
+var depLayer = new ol.layer.Vector({
   source: new ol.source.Vector({
     url: 'contour_dep.geojson',
     format: new ol.format.GeoJSON(),
   })
 });
-map.addLayer(dep);// add the vector layer to the map
+map.addLayer(depLayer);// add the vector layer to the 
+
+//création style des département pour ajouter couleur
+const styleFunction = function(format) {
+  const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16); // generate a random color
+  const name = format.get('nom'); // get the department name from the feature data
+  const label = new ol.style.Text({
+    font: '1.5vh Calibri',
+    text: name,
+    fill: new ol.style.Fill({
+      color: 'black'
+    }),
+    stroke: new ol.style.Stroke({
+      color: 'white',
+      width: 1.5
+    }),
+  });
+
+  return new ol.style.Style({
+    fill: new ol.style.Fill({
+      color: randomColor
+    }),
+    stroke: new ol.style.Stroke({
+      color: 'black',
+      width: 0.2
+    }),
+    text: label // add the label to the style
+  });
+};
+//ajout du style aux départements
+depLayer.setStyle(styleFunction);
+
 
 
 //  -------------------------- REMPLISSAGE ET ENVOI FORM -------------------------- //
@@ -97,6 +138,7 @@ map.on('singleclick', function(e) {
   else{
     nom_dep = dep.N.nom;
     console.log("Information sur le point cliqué : ", dep.N.nom);//Renvoie le nom du département cliqué dans la console
+    
     //Récupére le tableau associé au département choisi
     fetch('donnees.json').then(function(response){
       response.json().then(function(data){
@@ -104,31 +146,35 @@ map.on('singleclick', function(e) {
           // Récupère la stat en fonction du département
           if(nom_dep == data[0].departements[i].nom){
             tab = data[0].departements[i].statistiques[id_stat];
-            console.log(tab); // tableau 12,1 en sortie qui n'est pas affichable
+            console.log(tab); // tableau 12,1 en sortie
           }
         }
+        console.log(tab);
       })
+      console.log(tab);
     })
     //Affiche pannel 
-    afficher_pannel(tab);
+    console.log(tab);
+    afficher_pannel();
+
   }
   })
 })
 
 
 //AFFICHAGE PANNEAU  
-function afficher_pannel(tab){ 
+function afficher_pannel(){ 
   //création panneau s'il n'existe pas déjà
   if(PannelAlreadyExist == 0) {
     PannelAlreadyExist = 1,
     pannel.style.display = 'block',
     fermer_pannel(),
-    remplissage_pannel(tab)
+    remplissage_pannel()
   }
 }
 
 //AJOUT INFORMATIONS DANS PANNEAU
-function remplissage_pannel(tab){
+function remplissage_pannel(){
   //ajout Info stat étudiée titre pannel 
   titre.innerHTML = nom_dep.bold() + " : Timeline du " + stat.toLowerCase() + " en " + annee;
 
@@ -161,15 +207,25 @@ function remplissage_pannel(tab){
       }
     }
   });
-  //timeline.add(chart);
+  timeline.add(chart);
+  
   // Add a new point to the chart every 2 seconds
-  for (var i = 0; i < 12; i++){//for (var i = 0; i < yValues.length; i++){
-    setInterval(
-      console.log(chart.data),
+
+  // var i=0;
+  // let pointInterval = setInterval(
+  //     i+=1,
+  //     chart.data.datasets[0].data.push(yValues[i]),
+  //     chart.update(),
+  //     // if (i=12){break},// Update the chart to display the new data point every 2 seconds 
+  //   1000); // Add the new data point to the chart
+  //   if (i=12){clearInterval(pointInterval)};
+
+  for (let i = 0; i < 11; i++){//for (var i = 0; i < yValues.length; i++){
+    chart.update();// Update the chart to display the new data point every 2 seconds
+    setTimeout(
       chart.data.datasets[0].data.push(yValues[i]),
-      chart.update(),// Update the chart to display the new data point every 2 seconds 
     500); // Add the new data point to the chart
-  };
+ };
 }
   
 
