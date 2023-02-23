@@ -133,7 +133,6 @@ map.on('singleclick', function(e) {
   else{
     nom_dep = dep.N.nom;
     console.log("Information sur le point cliqué : ", dep.N.nom);//Renvoie le nom du département cliqué dans la console
-    
     //Récupére le tableau associé au département choisi
     fetch('donnees.json').then(function(response){
       response.json().then(function(data){
@@ -141,14 +140,12 @@ map.on('singleclick', function(e) {
           // Récupère la stat en fonction du département
           if(nom_dep == data[0].departements[i].nom){
             tab = data[0].departements[i].statistiques[id_stat],
-            console.log(tab) // tableau 12,1 en sortie
+            console.log(tab); // tableau 12,1 en sortie
           }
         }
+        afficher_pannel();
       })
-    })
-    //Affiche pannel 
-    console.log(tab);
-    afficher_pannel();
+    })    
   };
   })
 })
@@ -158,8 +155,8 @@ map.on('singleclick', function(e) {
 function afficher_pannel(){ 
   //création panneau s'il n'existe pas déjà
   if(PannelAlreadyExist == 0) {
-    PannelAlreadyExist = 1,
     pannel.style.display = 'block',
+    PannelAlreadyExist = 1,
     fermer_pannel(),
     remplissage_pannel()
   }
@@ -172,7 +169,6 @@ function remplissage_pannel(){
 
   var xValues = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
   var yValues = tab;
-  console.log(tab);//NE FONCTIONNE PLUS??????????????????
   
 
   chart = new Chart("myChart", {
@@ -190,16 +186,11 @@ function remplissage_pannel(){
       ]
     },
     options: {
-      legend: {
-        display: false,
-        boxWidth: 0,
-      },
       scales: {
         yAxes: [{ticks: {min: 0, max: Math.max.apply(null, tab)+1}}],
       }
     }
   });
-  timeline.add(chart);
   
   // Add a new point to the chart every 2 seconds
 
@@ -212,12 +203,12 @@ function remplissage_pannel(){
   //   1000); // Add the new data point to the chart
   //   if (i=12){clearInterval(pointInterval)};
 
-  for (let i = 0; i < 11; i++){//for (var i = 0; i < yValues.length; i++){
-    chart.update();// Update the chart to display the new data point every 2 seconds
-    setTimeout(
-      chart.data.datasets[0].data.push(yValues[i]),
-    1000); // Add the new data point to the chart
- };
+//   for (let i = 0; i < 11; i++){//for (var i = 0; i < yValues.length; i++){
+//     chart.update();// Update the chart to display the new data point every 2 seconds
+//     setTimeout(
+//       chart.data.datasets[0].data.push(yValues[i]),
+//     1000); // Add the new data point to the chart
+//  };
 }
   
 
@@ -226,7 +217,7 @@ function remplissage_pannel(){
     //écoute bouton pour fermer panneau
     if(PannelAlreadyExist == 1) {
       document.getElementById("btn_close").addEventListener('click', function() {
-        //chart.destroy();//supprimer chart existante!!!!!!!!!!!!!!!!!!!!!
+        chart.destroy();//supprimer chart existante!!!!!!!!!!!!!!!!!!!!!
         pannel.style.display = 'none';
         PannelAlreadyExist = 0;
       });

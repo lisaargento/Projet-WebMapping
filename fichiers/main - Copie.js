@@ -111,9 +111,9 @@ map.on('singleclick', function(e) {
     })
     //Affiche pannel 
     afficher_pannel();
-    setInterval(function(){
-      chart.update();
-    }, 2000);
+    // setInterval(function(){
+    //   chart.update();
+    // }, 2000);
   }
   })
 })
@@ -121,7 +121,7 @@ map.on('singleclick', function(e) {
 
   
     //AFFICHAGE INFORMATIONS DANS PANNEAU 
-function afficher_pannel(){ //NE FONCTIONNE PAS !!!!!!!!!!!!!!!!!!!!!!!!!!!
+function afficher_pannel(){
   //création panneau s'il n'existe pas déjà
   if(PannelAlreadyExist == 0) {
     setTimeout(function(){
