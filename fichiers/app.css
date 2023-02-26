@@ -50,6 +50,11 @@
     left: 80vw;
   }
 
+    /*bouton animation*/
+  img{
+    max-width: 1cm;
+  }
+  
   /*bouton panneau*/
   #btn_close {
     text-align: center;
@@ -69,4 +74,5 @@
     color: rgb(255, 255, 255);
     font-weight: bold;
   }
+
 
