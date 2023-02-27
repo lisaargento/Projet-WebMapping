@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,7 +7,6 @@
     <link rel="icon" href="icon.ico" />
     <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="app.css">
     <title>Statistiques des décès par déparpartement en France métropolitaine</title>
@@ -31,10 +30,9 @@
         <div id="pannel-container">
             <div id="titre">Timeline des décès par département</div>
             <div id="timeline">
-                <canvas id="myChart" style="width:90wh;max-width:600px"></canvas>
+                <canvas id="myChart"></canvas>
             </div>
-            <button id="stopAnimation"> <img src="pause.png" alt=""></button>
-            <button id="startAnimation"><img src="play.png" alt=""></button>
+            <button id="startStopBtn"> <img src="pause.png" alt=""></button>
             <button id="btn_close">Fermer</button>
         </div>
       </div>

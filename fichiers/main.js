@@ -6,23 +6,25 @@ var info = document.getElementById('info');
 var pannel = document.getElementById('pannel');
 var titre = document.getElementById('titre');
 var timeline = document.getElementById('timeline');
-var startAnimation = document.getElementById("startAnimation");
-var stopAnimation = document.getElementById("stopAnimation");
+const startStopBtn = document.querySelector("#startStopBtn");
 var btn_close = document.getElementById("btn_close");
-var stat;
-var annee;
-var id_stat = -1;
-var nom_dep;
-var tab;
-var PannelAlreadyExist = 0;
-var chart;
-var t;
-var i = 2; // indice pour faire défiler les points de la chart
+var stat; //statistique selectionnée
+var annee; //année selectionnée
+var id_stat = -1;//indice statistique selectionnée
+var nom_dep; //nom département selectionné
+var tab; //variable qui va prendre le tableau 12,1 pour la statistique selectionnée
+var PannelAlreadyExist = 0;//
+var chart; //graphique
+var t; //temps pour interval
+var i = 2; //indice pour faire défiler les points de la chart
 
+
+alert("Vous devez d'abord choisir une statistique à étudier et une année d'étude. Puis il vous suffira de cliquer sur le ou les départements que vous souhaitez étudier.");
 
 
 
 //  -------------------------- AFFICHAGE DE LA CARTE -------------------------- //
+
 //Définition de la vue initiale (pour pouvoir recentrer la carte)
 const view = new ol.View({
   center: ol.proj.fromLonLat([3, 46.6]),// coordonnées de centrage
@@ -31,7 +33,7 @@ const view = new ol.View({
 
 // CREATION CARTE AVEC OPENLAYERS
 var map = new ol.Map({
-  target: 'map', // the ID of the element in which to render the map
+  target: 'map',
   layers: [new ol.layer.Tile({source: new ol.source.OSM()})],
   view: view
 });
@@ -43,51 +45,66 @@ centerButton.addEventListener('click', function() {
   view.setZoom(5.3);
 });
 
-
-// AJOUT GEOJSON DES DÉPARTEMENTS -> create a new vector layer for the GeoJSON data
+// AJOUT GEOJSON DES DÉPARTEMENTS -> créer une nouvelle couche vecteur (new vector layer) pour les données GeoJSON
 var depLayer = new ol.layer.Vector({
   source: new ol.source.Vector({
     url: 'contour_dep.geojson',
     format: new ol.format.GeoJSON(),
   })
 });
-map.addLayer(depLayer);// add the vector layer to the 
+map.addLayer(depLayer);// ajoute la couche vecteur à la carte
 
-//création style des département pour ajouter couleur
-const styleFunction = function(format) {
-  const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16); // generate a random color
-  const name = format.get('nom'); // get the department name from the feature data
-  const label = new ol.style.Text({
-    font: '1.5vh Calibri',
-    text: name,
-    fill: new ol.style.Fill({
-      color: 'black'
-    }),
-    stroke: new ol.style.Stroke({
-      color: 'white',
-      width: 1.5
-    }),
+
+// Générer une couleur aléatoire
+function randomColor() {
+  return '#' + Math.floor(Math.random() * 16777215).toString(16);
+}
+// Créer une table de hachage pour stocker les couleurs des départements
+const depColors = {};
+
+// Charger le GeoJSON des départements et ajouter les couleurs
+fetch('contour_dep.geojson')
+.then(response => response.json())
+.then(data => {
+  // Pour chaque département, générer une couleur aléatoire et l'associer au code de département
+  data.features.forEach(feature => {
+    const depCode = feature.properties.code;
+    depColors[depCode] = randomColor();
   });
-  return new ol.style.Style({
-    fill: new ol.style.Fill({
-      color: randomColor
-    }),
-    stroke: new ol.style.Stroke({
-      color: 'black',
-      width: 0.2
-    }),
-    text: label // ajout des noms de département dans le style
+  // Appliquer le style aux départements en utilisant la table de hachage de couleurs
+  depLayer.setStyle(function(feature) {
+    const depCode = feature.get('code');
+    const color = depColors[depCode];
+    return new ol.style.Style({
+      fill: new ol.style.Fill({
+        color: color
+      }),
+      stroke: new ol.style.Stroke({
+        color: 'black',
+        width: 0.2
+      }),
+      text: new ol.style.Text({
+        font: '1.7vh Calibri',//taille et typo des noms des départements
+        text: feature.get('nom'),
+        fill: new ol.style.Fill({
+          color: 'black'
+        }),
+        stroke: new ol.style.Stroke({//contour pour que ce soit plus lisible
+          color: 'white',
+          width: 1.5
+        })
+      })
+    });
   });
-};
-//AJOUT DU STYLE AUX DEPARTEMENTS
-depLayer.setStyle(styleFunction);
+});
+
+
 
 
 
 //  -------------------------- REMPLISSAGE ET ENVOI FORM -------------------------- //
 
 // AJOUT DES STATISTIQUES DANS LE SELECT
-//select_statistique.selectedIndex=1; // à garder ???
 fetch('donnees.json').then(function(response){
   if (response.status!==200){
     console.log('Error Satus Code :' + response.status);
@@ -116,7 +133,7 @@ form.addEventListener("submit", envoi)
 function envoi(e){
   e.preventDefault();
   if (select_statistique.value == 'Choix de la statistique' || select_annee.value == "Choix de l'année d'étude") {
-    alert("Vous devez d'abord choisir une statistique à étudier et une année d'étude. Puis il vous suffira de cliquer sur le ou les départements que vous souhaitez étudier.");
+    alert("Vous devez choisir une statistique à étudier et une année d'étude avant de valider.");
   }
   else {
     stat = select_statistique.options[select_statistique.selectedIndex].value;
@@ -132,14 +149,14 @@ function envoi(e){
 }
 
 
-//  -------------------------- AFFICHAGE PANNEAU INFO DEP -------------------------- //
+//  -------------------------- AFFICHAGE PANNEAU INFO -------------------------- //
 
 
-//récupération département cliqué
+//Récupère département cliqué
 map.on('singleclick', function(e) {
   dep = map.forEachFeatureAtPixel(e.pixel, function(dep) {
     if (id_stat < 0) {
-      alert('Vous devez choisir une statistique à étudier ou valider votre choix !')
+      alert("Vous devez d'abord choisir une statistique à étudier et une année d'étude. Puis il vous suffira de cliquer sur le ou les départements que vous souhaitez étudier.");
     }
     else {
       nom_dep = dep.N.nom;
@@ -167,7 +184,7 @@ map.on('singleclick', function(e) {
 
 //AJOUT INFORMATIONS DANS PANNEAU
 function remplissage_pannel(){
-  //ajout Info stat étudiée titre pannel 
+  //Ajout titre pannel : Info stat étudiée 
   titre.innerHTML = nom_dep.bold() + " : Timeline du " + stat.toLowerCase() + " en " + annee;
 
   var xValues = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
@@ -177,7 +194,7 @@ function remplissage_pannel(){
     data: {
       labels: xValues,
       datasets: [
-        {label: 'Nombre de personnes décédées',
+        {label: stat,
         lineTension: 0,
         backgroundColor: "rgba(0,20,255,0.1)",
         borderColor: "rgba(0,20,255,0.5)",
@@ -187,6 +204,7 @@ function remplissage_pannel(){
       ]
     },
     options: {
+      responsive: true,
       scales: {
         y: {
           suggestedMin: 0,
@@ -196,37 +214,42 @@ function remplissage_pannel(){
     }
   });
 
-  i = 2; // initialisation obligatoire si on veut pouvoir fermer et ouvrir correctement des panneaux
+  i = 2; // initialisation obligatoire si on veut pouvoir fermer et ouvrir correctement les panneaux
   affichagePoints();
 
 }
   
-// Permet d'afficher les points au fur et à mesure
+// PERMET D'AFFICHER LES POINTS AU FUR ET A MESURE
 function affichagePoints() {
   t = setInterval(function () {
     if (i == 13) {
       i = 1;
     }
-    chart.data.datasets[0].data = tab.slice(0,i); // .slice équivaut que slicing en python tableau[0:3] => renvoie les 3 premières valeurs du tableau i.e. tableau[0], tableau[1], tableau[2]
+    chart.data.datasets[0].data = tab.slice(0,i); // .slice équivaut que slicing en python [:]
     chart.update();
     i ++;
   } , 1000);
 }
 
-
+// AJOUT BOUTON POUR FERMER LE PANNEAU ET SUPPRIMER LE GRAP EXISTANT
 btn_close.addEventListener('click', function() {
   clearInterval(t);
   pannel.style.display = 'none';
-  chart.destroy();//supprimer chart existante!!!!!!!!!!!!!!!!!!!!!
+  chart.destroy();//supprime chart
 });
 
-startAnimation.addEventListener('click', function() {
-  clearInterval(t);
-  affichagePoints();
-});
-
-stopAnimation.addEventListener('click', function() {
-  clearInterval(t);
+// AJOUT BOUTON POUR ARRETER OU DEMARRER ANIMATION CHART
+startStopBtn.addEventListener("click", function() {
+  if (startStopBtn.innerHTML == '<img src="pause.png">') {
+      // Code pour l'action de "Stop"
+      clearInterval(t);
+      startStopBtn.innerHTML = '<img src="play.png">';
+  } else {
+    // Code pour l'action de "Start"
+    clearInterval(t);
+    affichagePoints();
+    startStopBtn.innerHTML = '<img src="pause.png">';
+  }
 });
 
 

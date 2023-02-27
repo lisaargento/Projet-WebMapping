@@ -1,78 +1,76 @@
-#map { 
-    border:solid 2px black;
-    height: 85vh;
-    width: 95vw; 
-	margin-top: 1vh;
+body{
+  font-family: calibri;
 }
 
-#pannel {
-    display: none;
-  }
-  #pannel-back {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba( 0, 0, 0, .25 )
-  }
-  #pannel-container {
-    text-align: center;
-    color: rgb(0, 0, 0);
-    padding: 2vw;
-    border-radius: 5px;
-    border: 3px floralwhite solid;
-    position: fixed;
-    top: 7vh;
-    left: 20vw;
-    height: 73vh;
-    width: 60vw;
-    padding: 25px;
-    background: white;
-  }
-  #titre{
-    font-size: 1.5em;
-    font-family: calibri;
-  }
+/* MAP */
+#map { 
+  border:solid 2px black;
+  height: 85vh;
+  width: 95vw; 
+  margin-top: 1vh;
+}
 
-  #info{
-    font-family: calibri;
-    margin-left: 1vw;
-  }
+#info{
+  margin-left: 1vw;
+}
+
+/* PANNEL */
+#pannel {
+  display: none;
+}
+#pannel-back {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba( 0, 0, 0, .25 )
+}
+#pannel-container {
+  overflow: auto;
+  text-align: center;
+  align-items: center;
+  border-radius: 0.5dvi;
+  border: 3px floralwhite solid;
+  position: fixed;
+  top: 7vh;
+  left: 20vw;
+  height: 75vh;
+  width: 60vw;
+  padding: 3vh;
+  background: white;
+}
+
+#titre{
+  font-size: 2.3vw;
+}
 
 
 /*** Style boutons ***/
+boutton:hover{
+  font-weight: bold;
+}
 
-  /*bouton carte*/
-  #center-button{
-    margin-top: 1vh;
-    text-align: center;
-    left: 80vw;
-  }
+/*bouton carte*/
+#center-button{
+  margin-top: 1vh;
+  text-align: center;
+  left: 80vw;
+}
 
-    /*bouton animation*/
-  img{
-    max-width: 1cm;
-  }
-  
-  /*bouton panneau*/
-  #btn_close {
-    text-align: center;
-    color: black;
-    text-decoration: none;
-    font-size: 1em;
-    font-family: calibri;
-    background-color: #55aede;
-    border-radius: 5px;
-    border: solid 1px #000000;
-    padding: 12px;
-    float: right;
-    position: relative;
-  }
-  #btn_close:hover { /* NE FONCTIONNE PAS */
-    background-color: rgb(26, 96, 124);
-    color: rgb(255, 255, 255);
-    font-weight: bold;
-  }
+/*bouton animation*/
+img{
+  max-width: 4vh;
+}
+#startStopBtn{
+  float: left;
+  padding: 1vh;
+}
 
-
+/*bouton panneau*/
+#btn_close {
+  text-align: center;
+  text-decoration: none;
+  padding: 1vh;
+  float: right;
+}
