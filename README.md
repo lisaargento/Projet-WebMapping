@@ -18,5 +18,9 @@ L'objectif de cette page est de proposer aux utilisateurs de visualiser la timel
 
 Pour que le graphique affiche quelque chose, vous devez donc sélectionner l'une des deux premières statistiques qui s'affichent dans le menu déroulant. Comme nous avons les données pour une seule année, j'ai choisi d'afficher la statistique quelle que soit l'année sélectionnée. Cela signifie que ce code retourne toujours les mêmes résultats.
 
+Une fois la statistique et l’année sélectionnée, il faut valider le choix en cliquant sur le bouton « OK » puis sélectionner un département à étudier en cliquant dessus. Un panneau apparait avec un graphique vide qui se remplit progressivement. Cette animation peut être arrêtée et redémarrée par l’utilisateur grâce au bouton play/stop. À tout moment l’utilisateur peut fermer ce panneau pour cliquer sur un autre département. Il peut aussi choisir une nouvelle statistique et/ou une nouvelle année d’étude. Ce qui dans notre cas n’a pas d’intérêt car la maquette est redondante.
+
+
+
 Merci d'utiliser cette application!
 N'hésitez pas à l'améliorer ou faire des retours!
