@@ -234,6 +234,7 @@ function affichagePoints() {
 // AJOUT BOUTON POUR FERMER LE PANNEAU ET SUPPRIMER LE GRAP EXISTANT
 btn_close.addEventListener('click', function() {
   clearInterval(t);
+  startStopBtn.innerHTML = '<img src="pause.png">';
   pannel.style.display = 'none';
   chart.destroy();//supprime chart
 });
