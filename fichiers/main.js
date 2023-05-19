@@ -129,7 +129,7 @@ for (let i = 2022; i > 1980; i--){
 
 
 //ENVOIE FORM AVEC STAT ET ANNEE CHOISIES
-form.addEventListener("submit", envoi)
+form.addEventListener("submit", envoi);
 function envoi(e){
   e.preventDefault();
   if (select_statistique.value == 'Choix de la statistique' || select_annee.value == "Choix de l'année d'étude") {
